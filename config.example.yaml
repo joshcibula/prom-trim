@@ -1,0 +1,24 @@
+# prom-trim example configuration
+# Copy this file to config.yaml and adjust values for your environment.
+
+prometheus:
+  # Base URL of the Prometheus instance to query for rule usage metrics.
+  url: http://localhost:9090
+
+  # HTTP request timeout for Prometheus API calls.
+  # Defaults to 30s if not specified.
+  timeout: 30s
+
+rules:
+  # Directory (or glob pattern) containing Prometheus rule YAML files to
+  # evaluate for staleness.
+  rules_dir: /etc/prometheus/rules
+
+  # A recording rule is considered stale when it has had zero query hits for
+  # at least this duration. Expressed as a Go duration string.
+  # Example: 168h = 7 days
+  staleness_threshold: 168h
+
+  # When true, prom-trim will print proposed deletions/modifications but will
+  # NOT write any changes to disk. Useful for auditing before committing.
+  dry_run: true
