@@ -58,3 +58,18 @@ func TestRuleUsage_Fields(t *testing.T) {
 		t.Errorf("unexpected LastSeen: %v", ru.LastSeen)
 	}
 }
+
+func TestFetchRuleUsage_NilRules(t *testing.T) {
+	c := &Client{}
+
+	// Both nil and empty slice should return nil without error.
+	for _, rules := range [][]string{nil, {}} {
+		result, err := c.FetchRuleUsage(nil, rules, time.Hour)
+		if err != nil {
+			t.Fatalf("unexpected error for rules=%v: %v", rules, err)
+		}
+		if result != nil {
+			t.Errorf("expected nil result for rules=%v, got %v", rules, result)
+		}
+	}
+}
