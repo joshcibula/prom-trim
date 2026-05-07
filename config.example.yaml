@@ -22,3 +22,11 @@ rules:
   # When true, prom-trim will print proposed deletions/modifications but will
   # NOT write any changes to disk. Useful for auditing before committing.
   dry_run: true
+
+  # Optional list of rule name prefixes to exclude from staleness analysis.
+  # Rules whose names begin with any of these prefixes will never be flagged
+  # for removal, regardless of their query hit count.
+  # Example: preserve all SLO and alerting-critical rules.
+  exclude_prefixes:
+    # - slo:
+    # - critical:
