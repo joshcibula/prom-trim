@@ -15,6 +15,15 @@ type PruneResult struct {
 	DryRun  bool
 }
 
+// Summary returns a human-readable one-line description of the prune result.
+func (r *PruneResult) Summary() string {
+	action := "would remove"
+	if !r.DryRun {
+		action = "removed"
+	}
+	return fmt.Sprintf("%s %d rule(s), kept %d rule(s)", action, len(r.Removed), len(r.Kept))
+}
+
 // Prune removes stale recording rules from the given file.
 // If dryRun is true, no changes are written to disk.
 func Prune(filePath string, staleNames map[string]bool, dryRun bool) (*PruneResult, error) {
