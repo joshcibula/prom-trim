@@ -5,6 +5,22 @@ import (
 	"testing"
 )
 
+// writeTempRules creates a temporary YAML rules file with the given content
+// and registers it for cleanup when the test finishes.
+func writeTempRules(t *testing.T, content string) string {
+	t.Helper()
+	f, err := os.CreateTemp("", "rules-*.yml")
+	if err != nil {
+		t.Fatalf("failed to create temp file: %v", err)
+	}
+	if _, err := f.WriteString(content); err != nil {
+		t.Fatalf("failed to write temp file: %v", err)
+	}
+	f.Close()
+	t.Cleanup(func() { os.Remove(f.Name()) })
+	return f.Name()
+}
+
 func TestPrune_DryRun(t *testing.T) {
 	path := writeTempRules(t, `
 groups:
