@@ -36,6 +36,21 @@ func TestMain_DryRunFlag(t *testing.T) {
 	}
 }
 
+// TestMain_MissingRequiredFlag ensures the binary exits non-zero when the
+// --config flag is omitted entirely.
+func TestMain_MissingRequiredFlag(t *testing.T) {
+	if os.Getenv("PROM_TRIM_INTEGRATION") == "" {
+		t.Skip("skipping integration test; set PROM_TRIM_INTEGRATION=1 to run")
+	}
+
+	cmd := exec.Command("go", "run", ".")
+	out, err := cmd.CombinedOutput()
+	if err == nil {
+		t.Fatalf("expected non-zero exit when --config flag is omitted, got nil; output: %s", out)
+	}
+	t.Logf("output: %s", out)
+}
+
 func writeTempConfig(t *testing.T) string {
 	t.Helper()
 	content := `prometheus_url: http://localhost:9090
