@@ -95,3 +95,24 @@ func TestAnnotationKeys_Empty(t *testing.T) {
 		t.Errorf("expected empty keys, got %v", keys)
 	}
 }
+
+func TestExtractAnnotations_AnnotationValues(t *testing.T) {
+	path := writeAnnotationRules(t, annotationRulesYAML)
+	summaries, err := ExtractAnnotations(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Verify that all returned summaries have at least one annotation.
+	for _, s := range summaries {
+		if len(s.Annotations) == 0 {
+			t.Errorf("summary for %q has no annotations, expected at least one", s.Record)
+		}
+	}
+	// Verify the second summary belongs to group_b and has the correct owner.
+	if summaries[1].Record != "other:sum" {
+		t.Errorf("expected other:sum, got %s", summaries[1].Record)
+	}
+	if summaries[1].Annotations["owner"] != "team-b" {
+		t.Errorf("expected team-b owner annotation, got %s", summaries[1].Annotations["owner"])
+	}
+}
